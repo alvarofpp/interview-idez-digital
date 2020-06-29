@@ -41,12 +41,12 @@ Você poderá fazer um fork nesse repositório e trabalhar a partir daí.
 
 O primeiro passo para o início do desenvolvimento é escolher qual tecnologia de banco de dados será utilizada no seu projeto. Dependendo da escolha, existem algumas alterações que devem ser feitas no seu projeto base.
 
-- Alterar, no arquivo `.env`, o valor da variável `DB_CONNECTION=mysql|mongodb`.
+- Copie o arquivo `.env.example` e salve como `.env`.
 
 Para verificar se a sua solução está funcionando, utilize o comando `docker-compose up --build` a partir do diretório raiz do projeto. 
-A sua API estará mapeada para a porta `8000`do seu host local. Uma requisição `GET localhost:8000/` vai retornar a versão do Lumen em execução.
+A sua API estará mapeada para a porta `8000`do seu host local. Uma requisição `GET localhost:8000/` vai retornar a versão do Laravel em execução.
 
-**IMPORTANTE:** após a execução do `docker-compose up --build`, na pasta do projeto, execute o comando `docker exec -it users-api-php composer install`.
+**IMPORTANTE:** após a execução do `docker-compose up -d`, na pasta do projeto, execute o comando `docker-compose run web composer install` e em seguida `docker-compose run web php artisan key:generate`.
 Quando o volume atual é mapeado para dentro do container, ele sobrescreve a pasta com as dependências instaladas pelo composer, por isso o comando é necessário. 
 
 ## Avaliação
