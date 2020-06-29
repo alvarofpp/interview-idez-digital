@@ -1,0 +1,32 @@
+version: "3.4"
+
+services:
+  web:
+    image: ambientum/php:7.4-nginx
+    container_name: idez-web
+    volumes:
+      - .:/var/www/app:delegated
+    ports:
+      - 8000:8080
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - PHP_MEMORY_LIMIT=-1
+      - COMPOSER_MEMORY_LIMIT=-1
+  postgres:
+    image: postgres:12-alpine
+    container_name: idez-postgres
+    restart: always
+    tty: true
+    environment:
+      - POSTGRES_DB=idez
+      - POSTGRES_USER=idez
+      - POSTGRES_PASSWORD=idez
+    ports:
+      - 5432:5432
+    volumes:
+      - idez-data:/var/lib/postgresql/data:delegated
+volumes:
+  idez-data:
+    driver: local
