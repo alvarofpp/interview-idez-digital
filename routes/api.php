@@ -38,6 +38,12 @@ Route::group(['middleware' => 'auth:api'], function () {
      */
     Route::apiResource('accounts', 'AccountController')
         ->except(['index',]);
+
+    /*
+     * Transaction
+     */
+    Route::apiResource('accounts.transactions', 'TransactionController')
+        ->only(['store',]);
 });
 
 /*
