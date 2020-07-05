@@ -4,6 +4,7 @@ namespace App;
 
 use Alvarofpp\Masks\Traits\MaskAttributes;
 use App\Models\Account;
+use App\Models\AccountType;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -55,6 +56,31 @@ class User extends Authenticatable
             14 => '+## (###) #####-####',
         ],
     ];
+
+    /**
+     * Searches the user by $value.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $value
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSearchBy($query, $value)
+    {
+        $value = $value . '%';
+        // Name
+        $query = $query->where('name', 'ILIKE', $value);
+        // CPF
+        $query = $query->orWhere('cpf', 'ILIKE', unmaskValue($value));
+        // Account.Company.CNPJ
+        $query = $query->orWhereHas('accounts', function ($queryAccount) use ($value) {
+            $queryAccount->where('account_type_id', AccountType::TYPE_COMPANY)
+                ->whereHas('company', function ($queryCompany) use ($value) {
+                    $queryCompany->where('cnpj', 'ILIKE', unmaskValue($value));
+                });
+        });
+
+        return $query;
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

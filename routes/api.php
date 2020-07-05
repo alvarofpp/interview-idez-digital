@@ -28,14 +28,26 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth',], function () {
 
 Route::group(['middleware' => 'auth:api'], function () {
     /*
-     * Account types
+     * User
      */
-    Route::apiResource('account_types', 'AccountTypeController')
-        ->only(['index',]);
+    Route::apiResource('users', 'UserController')
+        ->except(['store',]);
 
     /*
-     * Transaction types
+     * Account
      */
-    Route::apiResource('transaction_types', 'TransactionTypeController')
-        ->only(['index',]);
+    Route::apiResource('accounts', 'AccountController')
+        ->except(['index',]);
 });
+
+/*
+ * Account types
+ */
+Route::apiResource('account_types', 'AccountTypeController')
+    ->only(['index',]);
+
+/*
+ * Transaction types
+ */
+Route::apiResource('transaction_types', 'TransactionTypeController')
+    ->only(['index',]);
