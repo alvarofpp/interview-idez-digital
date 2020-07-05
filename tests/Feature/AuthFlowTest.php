@@ -116,7 +116,6 @@ class AuthFlowTest extends TestCase
         $response = $this->getJson('/api/auth/logout', [
             'Authorization' => 'Bearer ' . $token,
         ]);
-        // dd($response->getContent(), $response->getStatusCode());
 
         $response->assertSuccessful()
             ->assertJson([

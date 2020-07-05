@@ -25,3 +25,17 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth',], function () {
     Route::get('logout', 'AuthController@logout')
         ->name('auth.logout');
 });
+
+Route::group(['middleware' => 'auth:api'], function () {
+    /*
+     * Account types
+     */
+    Route::apiResource('account_types', 'AccountTypeController')
+        ->only(['index',]);
+
+    /*
+     * Transaction types
+     */
+    Route::apiResource('transaction_types', 'TransactionTypeController')
+        ->only(['index',]);
+});
