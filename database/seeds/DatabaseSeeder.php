@@ -11,6 +11,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UserSeeder::class);
+        // Types
+        $this->call(AccountTypeSeeder::class);
+        $this->call(TransactionTypeSeeder::class);
+
+        if (app()->environment() !== 'production') {
+            $this->call(DevelopmentSeeder::class);
+        }
     }
 }
