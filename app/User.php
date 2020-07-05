@@ -2,13 +2,15 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Alvarofpp\Masks\Traits\MaskAttributes;
+use App\Models\Account;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use MaskAttributes, HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +18,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'cpf', 'telephone',
+        'email', 'password',
     ];
 
     /**
@@ -25,15 +28,39 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * The number of models to return for pagination.
+     *
+     * @var int
+     */
+    protected $perPage = 15;
+
+    /**
+     * The attributes that should be masked.
      *
      * @var array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
+    protected $masks = [
+        'cpf' => '###.###.###-##',
+        'telephone' => [
+            8 => '####-####',
+            9 => '#####-####',
+            10 => '(##) ####-####',
+            11 => '(##) #####-####',
+            12 => '(###) #####-####',
+            13 => '+## (##) #####-####',
+            14 => '+## (###) #####-####',
+        ],
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function accounts()
+    {
+        return $this->hasMany(Account::class, 'user_id', 'id');
+    }
 }

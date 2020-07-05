@@ -42,9 +42,9 @@ return [
         ],
 
         'api' => [
-            'driver' => 'token',
+            'driver' => 'passport',
             'provider' => 'users',
-            'hash' => false,
+            // 'hash' => true,
         ],
     ],
 
@@ -113,5 +113,14 @@ return [
     */
 
     'password_timeout' => 10800,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Additionals
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'token_key' => 'iDezChallenge',
 
 ];
