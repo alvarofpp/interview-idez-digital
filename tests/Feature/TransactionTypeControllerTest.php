@@ -10,7 +10,7 @@ use Tests\TestCase;
 class TransactionTypeControllerTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * TransactionTypeController@index
      *
      * @return void
      */

@@ -10,7 +10,7 @@ use Tests\TestCase;
 class AccountTypeControllerTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * AccountTypeController@index
      *
      * @return void
      */

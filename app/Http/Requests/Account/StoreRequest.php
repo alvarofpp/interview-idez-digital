@@ -45,8 +45,8 @@ class StoreRequest extends FormRequest
         if ($this->all()['account_type_id'] == AccountType::TYPE_COMPANY) {
             $validator->addRules([
                 'cnpj' => ['required', 'string', 'size:14', 'cnpj', 'unique:companies',],
-                'company_name' => ['required', 'string', 'max:255',],
-                'trading_name' => ['required', 'string', 'max:255',],
+                'company_name' => ['required', 'string', 'min:1', 'max:255',],
+                'trading_name' => ['required', 'string', 'min:1', 'max:255',],
             ]);
         }
     }

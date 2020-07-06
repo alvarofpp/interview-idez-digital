@@ -9,7 +9,7 @@ use Tests\TestCase;
 class UserControllerTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * UserController@index
      *
      * @return void
      */
@@ -22,14 +22,38 @@ class UserControllerTest extends TestCase
         $response = $this->getJson('/api/users', [
             'Authorization' => 'Bearer ' . $token,
         ]);
-        $resource = UserResource::collection(User::all());
+        $resource = UserResource::collection(User::paginate());
 
         $response->assertSuccessful()
             ->assertResource($resource);
     }
 
     /**
-     * A basic feature test example.
+     * UserController@index
+     * q = '11111111111'
+     *
+     * @return void
+     */
+    public function testIndexWithDocCpf()
+    {
+        $doc = '11111111111';
+        $user = factory(User::class)->create([
+            'cpf' => $doc,
+        ]);
+        $token = $user->createToken(config('auth.token_key'))->accessToken;
+        factory(User::class, 10)->create();
+
+        $response = $this->getJson('/api/users?q='.$doc, [
+            'Authorization' => 'Bearer ' . $token,
+        ]);
+        $resource = UserResource::collection(User::searchBy($doc)->paginate());
+
+        $response->assertSuccessful()
+            ->assertResource($resource);
+    }
+
+    /**
+     * UserController@show
      *
      * @return void
      */
@@ -48,7 +72,7 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * UserController@update
      *
      * @return void
      */
@@ -80,7 +104,7 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * UserController@destroy
      *
      * @return void
      */

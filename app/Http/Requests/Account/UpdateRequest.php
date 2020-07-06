@@ -4,6 +4,7 @@ namespace App\Http\Requests\Account;
 
 use Alvarofpp\ExpandRequest\Traits\UrlParameters;
 use App\Models\Account;
+use App\Rules\SessionUserAccount;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -37,7 +38,7 @@ class UpdateRequest extends FormRequest
             'bank_branch' => ['string', 'min:4', 'max:6',],
             'number' => ['string', 'min:5', 'max:6',],
             'digit' => ['string', 'size:1',],
-            'account' => ['required', 'exists:accounts,id',],
+            'account' => ['required', 'exists:accounts,id', new SessionUserAccount()],
         ];
     }
 

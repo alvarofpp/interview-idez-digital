@@ -124,7 +124,7 @@ class Controller extends BaseController
      */
     private function makeMessageError(array $jsonData)
     {
-        $messageEnd = ' Por favor, tente mais tarde!';
+        $messageEnd = ' Please try later!';
 
         if (array_key_exists('sentence_ending', $jsonData)) {
             if (is_bool($jsonData['sentence_ending']) && $jsonData['sentence_ending']) {

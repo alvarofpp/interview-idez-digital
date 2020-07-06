@@ -66,16 +66,15 @@ class User extends Authenticatable
      */
     public function scopeSearchBy($query, $value)
     {
-        $value = $value . '%';
         // Name
-        $query = $query->where('name', 'ILIKE', $value);
+        $query = $query->where('name', 'LIKE', $value . '%');
         // CPF
-        $query = $query->orWhere('cpf', 'ILIKE', unmaskValue($value));
+        $query = $query->orWhere('cpf', 'LIKE', unmaskValue($value) . '%');
         // Account.Company.CNPJ
         $query = $query->orWhereHas('accounts', function ($queryAccount) use ($value) {
             $queryAccount->where('account_type_id', AccountType::TYPE_COMPANY)
                 ->whereHas('company', function ($queryCompany) use ($value) {
-                    $queryCompany->where('cnpj', 'ILIKE', unmaskValue($value));
+                    $queryCompany->where('cnpj', 'LIKE', unmaskValue($value) . '%');
                 });
         });
 

@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.2.5",
+        "alvarofpp/expand-request": "^1.1",
         "alvarofpp/masks": "^1.1",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",

@@ -17,7 +17,7 @@ class AuthFlowTest extends TestCase
     ];
 
     /**
-     * A basic feature test example.
+     * Auth\RegisterController@register
      *
      * @return void
      */
@@ -56,7 +56,7 @@ class AuthFlowTest extends TestCase
 
     /**
      * @depends testRegister
-     * A basic feature test example.
+     * Auth\AuthController@login
      *
      * @return void
      */
@@ -98,7 +98,7 @@ class AuthFlowTest extends TestCase
 
     /**
      * @depends testLogin
-     * A basic feature test example.
+     * Auth\AuthController@logout
      *
      * @return void
      */
@@ -124,7 +124,7 @@ class AuthFlowTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * Auth\AuthController@logout
      *
      * @return void
      */

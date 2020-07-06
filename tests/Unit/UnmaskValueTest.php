@@ -7,11 +7,11 @@ use PHPUnit\Framework\TestCase;
 class UnmaskValueTest extends TestCase
 {
     /**
-     * A basic unit test example.
+     * Helper unmask.
      *
      * @return void
      */
-    public function testDocuments()
+    public function testUnmask()
     {
         $documents = [
             [

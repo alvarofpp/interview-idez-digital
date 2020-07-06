@@ -11,25 +11,32 @@ use Tests\TestCase;
 class TransactionControllerTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * TransactionController@store
      *
      * @return void
      */
     public function testStore()
     {
+        // Users
         $users = factory(User::class, 10)
             ->state('complete')
             ->create();
-        $token = $users->shuffle()
-            ->shift()
-            ->createToken(config('auth.token_key'))->accessToken;
+        $user = $users->shuffle()
+            ->shift();
+        $token = $user->createToken(config('auth.token_key'))->accessToken;
+        // Accounts
+        $userAccounts = $user->accounts;
+        $accountId = $userAccounts->random()->id;
         $accounts = Account::all();
-        $accountId = $accounts->random()->first()->user_id;
+        // Transactions
         $data = [
             'value' => $this->faker->randomFloat(2, -100, 100),
-            'number' => $this->faker->randomNumber(5, true),
-            'account_to_id' => $accounts->random()->first()->user_id,
-            'transaction_type_id' => TransactionType::all()->first()->id,
+            'account_to_id' => $accounts->random()
+                ->id,
+            'transaction_type_id' => TransactionType::all()
+                ->shuffle()
+                ->first()
+                ->id,
         ];
 
         $response = $this->postJson('/api/accounts/' . $accountId . '/transactions', $data, [

@@ -4,8 +4,56 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "86c7514e97cc51303fdf7698fd4195f8",
+    "content-hash": "d4fab96a9184a6785f78474b672962ff",
     "packages": [
+        {
+            "name": "alvarofpp/expand-request",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alvarofpp/laravel-expand-request.git",
+                "reference": "7eb81e8ecbe189a651fd9f5c5c93eab508047107"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alvarofpp/laravel-expand-request/zipball/7eb81e8ecbe189a651fd9f5c5c93eab508047107",
+                "reference": "7eb81e8ecbe189a651fd9f5c5c93eab508047107",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0"
+            },
+            "require-dev": {
+                "laravel/laravel": ">=6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Alvarofpp\\ExpandRequest\\": "/src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Álvaro Ferreira Pires de Paiva",
+                    "email": "alvarofepipa@gmail.com"
+                }
+            ],
+            "description": "A package to make it easy to manipulate your requests and more",
+            "homepage": "https://github.com/alvarofpp/laravel-expand-request",
+            "keywords": [
+                "helpers",
+                "laravel",
+                "request"
+            ],
+            "time": "2020-05-23T20:55:36+00:00"
+        },
         {
             "name": "alvarofpp/masks",
             "version": "1.1.0",

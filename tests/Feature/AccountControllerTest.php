@@ -10,7 +10,7 @@ use Tests\TestCase;
 class AccountControllerTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * AccountController@store
      *
      * @return void
      */
@@ -54,7 +54,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * AccountController@store
      *
      * @return void
      */
@@ -109,7 +109,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * AccountController@show
      *
      * @return void
      */
@@ -134,7 +134,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * AccountController@show
      *
      * @return void
      */
@@ -159,7 +159,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * AccountController@update
      *
      * @return void
      */
@@ -202,7 +202,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * AccountController@update
      *
      * @return void
      */
@@ -251,7 +251,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * AccountController@destroy
      *
      * @return void
      */

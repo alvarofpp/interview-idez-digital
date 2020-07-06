@@ -14,6 +14,7 @@ class CreateTransactionsTable extends Migration
     public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
+            $table->id();
             $table->float('value');
 
             $table->string('transaction_type_id', 5);
@@ -24,7 +25,8 @@ class CreateTransactionsTable extends Migration
                 ->onDelete('CASCADE');
 
             $table->integer('account_from_id')
-                ->unsigned();
+                ->unsigned()
+                ->nullable();
             $table->foreign('account_from_id')
                 ->references('id')
                 ->on('accounts')
@@ -32,7 +34,8 @@ class CreateTransactionsTable extends Migration
                 ->onDelete('SET NULL');
 
             $table->integer('account_to_id')
-                ->unsigned();
+                ->unsigned()
+                ->nullable();
             $table->foreign('account_to_id')
                 ->references('id')
                 ->on('accounts')
