@@ -1,8 +1,6 @@
 <?php
 
-
-namespace App\Traits;
-
+namespace App\Models\Concerns\Traits;
 
 /**
  * This trait defines the primary key as string.
