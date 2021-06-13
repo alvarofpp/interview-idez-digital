@@ -475,7 +475,8 @@ Exemplo de request:
 ```json
 {
   "number": "16441-3",
-  "company_name": "Teste social update 2"
+  "company_name": "Teste social",
+  "trading_name": "Teste fantasia"
 }
 ```
 
