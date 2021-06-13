@@ -20,8 +20,11 @@ class Account extends Model
      * @var array
      */
     protected $fillable = [
-        'bank_branch', 'number', 'digit',
-        'user_id', 'account_type_id',
+        'bank_branch',
+        'number',
+        'digit',
+        'user_id',
+        'account_type_id',
     ];
 
     /**
@@ -35,17 +38,6 @@ class Account extends Model
     }
 
     /**
-     * Returns all transactions.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function getTransactionsAttribute()
-    {
-        return $this->transactions_made
-            ->merge($this->transactions_received);
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
@@ -56,7 +48,7 @@ class Account extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function account_type()
+    public function accountType()
     {
         return $this->belongsTo(AccountType::class, 'account_type_id');
     }
@@ -72,7 +64,7 @@ class Account extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function transactions_made()
+    public function transactionsMade()
     {
         return $this->hasMany(Transaction::class, 'account_from_id', 'id');
     }
@@ -80,8 +72,18 @@ class Account extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function transactions_received()
+    public function transactionsReceived()
     {
         return $this->hasMany(Transaction::class, 'account_to_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions()
+    {
+        return $this->transactionsMade()
+            ->union($this->transactionsReceived()->toBase())
+            ->orderByDesc('created_at');
     }
 }

@@ -20,13 +20,15 @@ class Transaction extends Model
      */
     protected $fillable = [
         'value',
-        'transaction_type_id', 'account_from_id', 'account_to_id',
+        'transaction_type_id',
+        'account_from_id',
+        'account_to_id',
     ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function transaction_type()
+    public function transactionType()
     {
         return $this->belongsTo(TransactionType::class, 'transaction_type_id');
     }
@@ -34,7 +36,7 @@ class Transaction extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function account_from()
+    public function accountFrom()
     {
         return $this->belongsTo(Account::class, 'account_from_id');
     }
@@ -42,7 +44,7 @@ class Transaction extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function account_to()
+    public function accountTo()
     {
         return $this->belongsTo(Account::class, 'account_to_id');
     }

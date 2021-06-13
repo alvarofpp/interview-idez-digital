@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\PrimaryKeyAsString;
+use App\Models\Concerns\Traits\PrimaryKeyAsString;
 use Illuminate\Database\Eloquent\Model;
 
 class AccountType extends Model
@@ -22,7 +22,9 @@ class AccountType extends Model
      * @var array
      */
     protected $fillable = [
-        'slug', 'name', 'description',
+        'slug',
+        'name',
+        'description',
     ];
 
     // Constants
@@ -32,4 +34,12 @@ class AccountType extends Model
         self::TYPE_COMPANY,
         self::TYPE_PERSON,
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function accounts()
+    {
+        return $this->hasMany(Account::class, 'account_type_id', 'id');
+    }
 }

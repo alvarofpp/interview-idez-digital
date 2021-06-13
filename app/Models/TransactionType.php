@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\PrimaryKeyAsString;
+use App\Models\Concerns\Traits\PrimaryKeyAsString;
 use Illuminate\Database\Eloquent\Model;
 
 class TransactionType extends Model
@@ -38,4 +38,12 @@ class TransactionType extends Model
         self::TYPE_CELL_PHONE_RECHARGE,
         self::TYPE_PURCHASE_CREDIT,
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'transaction_type_id', 'id');
+    }
 }

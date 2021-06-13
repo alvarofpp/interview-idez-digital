@@ -19,8 +19,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'cpf', 'telephone',
-        'email', 'password',
+        'name',
+        'cpf',
+        'telephone',
+        'email',
+        'password',
     ];
 
     /**
@@ -66,17 +69,21 @@ class User extends Authenticatable
      */
     public function scopeSearchBy($query, $value)
     {
+        $unmaskValue = unmaskValue($value);
+
         // Name
         $query = $query->where('name', 'LIKE', $value . '%');
-        // CPF
-        $query = $query->orWhere('cpf', 'LIKE', unmaskValue($value) . '%');
-        // Account.Company.CNPJ
-        $query = $query->orWhereHas('accounts', function ($queryAccount) use ($value) {
-            $queryAccount->where('account_type_id', AccountType::TYPE_COMPANY)
-                ->whereHas('company', function ($queryCompany) use ($value) {
-                    $queryCompany->where('cnpj', 'LIKE', unmaskValue($value) . '%');
-                });
-        });
+        if (!empty($unmaskValue)) {
+            // CPF
+            $query = $query->orWhere('cpf', 'LIKE',  $unmaskValue. '%');
+            // Account.Company.CNPJ
+            $query = $query->orWhereHas('accounts', function ($queryAccount) use ($value) {
+                $queryAccount->where('account_type_id', AccountType::TYPE_COMPANY)
+                    ->whereHas('company', function ($queryCompany) use ($value) {
+                        $queryCompany->where('cnpj', 'LIKE', unmaskValue($value) . '%');
+                    });
+            });
+        }
 
         return $query;
     }
