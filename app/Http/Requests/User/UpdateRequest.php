@@ -26,8 +26,8 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => ['string', 'min:3', 'max:255',],
-            'email' => ['string', 'email', 'max:255', 'unique:users',],
-            'cpf' => ['string', 'cpf', 'unique:users',],
+            'email' => ['string', 'email', 'max:255', 'unique:users,email,'.Auth::id(),],
+            'cpf' => ['string', 'cpf', 'unique:users,cpf,'.Auth::id(),],
             'telephone' => ['string', 'min:8', 'max:14',],
             'password' => ['string', 'min:8', 'confirmed',],
         ];
