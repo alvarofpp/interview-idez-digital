@@ -16,8 +16,6 @@ class TransactionTypeController extends Controller
      */
     public function index(IndexRequest $request)
     {
-        $transactionTypes = TransactionType::all();
-
-        return TransactionTypeResource::collection($transactionTypes);
+        return TransactionTypeResource::collection(TransactionType::all());
     }
 }

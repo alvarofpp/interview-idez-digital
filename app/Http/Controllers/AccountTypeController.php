@@ -16,8 +16,6 @@ class AccountTypeController extends Controller
      */
     public function index(IndexRequest $request)
     {
-        $accountTypes = AccountType::all();
-
-        return AccountTypeResource::collection($accountTypes);
+        return AccountTypeResource::collection(AccountType::all());
     }
 }

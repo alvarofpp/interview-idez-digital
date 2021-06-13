@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -51,7 +52,7 @@ class Controller extends BaseController
      * @param int $code
      * @return \Illuminate\Http\JsonResponse
      */
-    public function responseSuccess(array $jsonData, int $code = 200)
+    public function responseSuccess(array $jsonData, int $code = Response::HTTP_OK)
     {
         $response = $this->makeResponse([
             'message' => $jsonData['message'],
@@ -68,7 +69,7 @@ class Controller extends BaseController
      * @param int $code
      * @return \Illuminate\Http\JsonResponse
      */
-    public function responseData(array $jsonData, int $code = 200)
+    public function responseData(array $jsonData, int $code = Response::HTTP_OK)
     {
         $response = $this->makeResponse([
             'data' => $jsonData,
@@ -82,10 +83,9 @@ class Controller extends BaseController
      *
      * @param array $jsonData
      * @param int $code
-     * @param string $endMessage
      * @return \Illuminate\Http\JsonResponse
      */
-    public function responseError(array $jsonData, int $code = 400)
+    public function responseError(array $jsonData, int $code = Response::HTTP_BAD_REQUEST)
     {
         $response = $this->makeResponse([
             'message' => $jsonData['message'],
@@ -102,10 +102,9 @@ class Controller extends BaseController
      *
      * @param array $jsonData
      * @param int $code
-     * @param string $endMessage
      * @return \Illuminate\Http\JsonResponse
      */
-    public function responseErrorServer(array $jsonData, int $code = 500)
+    public function responseErrorServer(array $jsonData, int $code = Response::HTTP_INTERNAL_SERVER_ERROR)
     {
         $response = $this->makeResponse([
             'message' => $this->makeMessageError($jsonData),

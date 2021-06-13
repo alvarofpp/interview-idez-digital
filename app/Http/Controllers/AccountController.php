@@ -10,6 +10,7 @@ use App\Http\Resources\AccountResource;
 use App\Models\Account;
 use App\Models\AccountType;
 use App\Models\Company;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -19,31 +20,33 @@ class AccountController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreRequest $request
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(StoreRequest $request)
     {
-        $data = $request->all();
-
         DB::beginTransaction();
         try {
             $account = Account::create([
-                'bank_branch' => $data['bank_branch'],
-                'number' => $data['number'],
-                'digit' => $data['digit'],
-                'account_type_id' => $data['account_type_id'],
+                'bank_branch' => $request->get('bank_branch'),
+                'number' => $request->get('number'),
+                'digit' => $request->get('digit'),
+                'account_type_id' => $request->get('account_type_id'),
                 'user_id' => Auth::id(),
             ]);
 
-            if ($data['account_type_id'] == AccountType::TYPE_COMPANY) {
+            if ($request->get('account_type_id') == AccountType::TYPE_COMPANY) {
                 Company::create([
-                    'cnpj' => $data['cnpj'],
-                    'company_name' => $data['company_name'],
-                    'trading_name' => $data['trading_name'],
+                    'cnpj' => unmaskValue($request->get('cnpj')),
+                    'company_name' => $request->get('company_name'),
+                    'trading_name' => $request->get('trading_name'),
                     'account_id' => $account->id,
                 ]);
             }
+
+            $account->load([
+                'accountType',
+                'company',
+            ]);
 
             $accountResource = new AccountResource($account);
 
@@ -51,11 +54,11 @@ class AccountController extends Controller
             return $this->responseSuccess([
                 'message' => trans('controllers.AccountController.store.success'),
                 'data' => $accountResource,
-            ], 201);
+            ], Response::HTTP_CREATED);
         } catch (\Exception $exception) {
             DB::rollBack();
             return $this->responseErrorServer([
-                'message' => trans('controllers.AccountController.store.success'),
+                'message' => trans('controllers.AccountController.store.error'),
                 'exception' => $exception->getMessage(),
             ]);
         }
@@ -68,12 +71,18 @@ class AccountController extends Controller
      * @param int $id
      * @return AccountResource
      */
-    public function show(ShowRequest $request, $id)
+    public function show(ShowRequest $request, int $id)
     {
-        $account = Account::findOrFail($id);
-        $accountResource = new AccountResource($account, true);
+        $account = Account::query()
+            ->with([
+                'accountType',
+                'company',
+                'transactions.accountFrom.user',
+                'transactions.accountTo.user',
+            ])
+            ->findOrFail($id);
 
-        return $accountResource;
+        return new AccountResource($account);
     }
 
     /**
@@ -83,7 +92,7 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request, int $id)
     {
         $data = $request->all();
         $account = Account::findOrFail($id);
@@ -105,12 +114,12 @@ class AccountController extends Controller
             }
 
             tap($account)->update($data);
-            $accountResource = new AccountResource($account);
+            $account->load(['accountType']);
 
             DB::commit();
             return $this->responseSuccess([
                 'message' => trans('controllers.AccountController.update.success'),
-                'data' => $accountResource,
+                'data' => new AccountResource($account),
             ]);
         } catch (\Exception $exception) {
             DB::rollBack();
@@ -125,25 +134,15 @@ class AccountController extends Controller
      * Remove the specified resource from storage.
      *
      * @param DestroyRequest $request
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(DestroyRequest $request, $id)
+    public function destroy(DestroyRequest $request, int $id)
     {
-        DB::beginTransaction();
-        try {
-            Account::destroy($id);
+        Account::destroy($id);
 
-            DB::commit();
-            return $this->responseSuccess([
-                'message' => trans('controllers.AccountController.destroy.success'),
-            ]);
-        } catch (\Exception $exception) {
-            DB::rollBack();
-            return $this->responseErrorServer([
-                'message' => trans('controllers.AccountController.destroy.error'),
-                'exception' => $exception->getMessage(),
-            ]);
-        }
+        return $this->responseSuccess([
+            'message' => trans('controllers.AccountController.destroy.success'),
+        ]);
     }
 }

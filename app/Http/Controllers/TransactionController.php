@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Transaction\StoreRequest;
 use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
 
 class TransactionController extends Controller
 {
@@ -16,35 +16,27 @@ class TransactionController extends Controller
      * @param int $accountId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreRequest $request, $accountId)
+    public function store(StoreRequest $request, int $accountId)
     {
-        $data = $request->all();
+        $transaction = Transaction::create([
+            'value' => $request->get('value'),
+            'transaction_type_id' => $request->get('transaction_type_id'),
+            'account_to_id' => $request->get('account_to_id'),
+            'account_from_id' => $accountId,
+        ]);
+        $transaction->load([
+            'accountFrom.user',
+            'accountFrom.company',
+            'accountFrom.accountType',
+            'accountTo.user',
+            'accountTo.company',
+            'accountTo.accountType',
+            'transactionType',
+        ]);
 
-        DB::beginTransaction();
-        try {
-            $transaction = Transaction::create([
-                'value' => $data['value'],
-                'transaction_type_id' => $data['transaction_type_id'],
-                'account_to_id' => $data['account_to_id'],
-                'account_from_id' => $accountId,
-            ]);
-            $transaction->load([
-                'account_from.user', 'account_from.company',
-                'account_to.user', 'account_to.company',
-                'transaction_type',]);
-            $transactionResource = new TransactionResource($transaction);
-
-            DB::commit();
-            return $this->responseSuccess([
-                'message' => trans('controllers.TransactionController.store.success'),
-                'data' => $transactionResource,
-            ], 201);
-        } catch (\Exception $exception) {
-            DB::rollBack();
-            return $this->responseErrorServer([
-                'message' => trans('controllers.TransactionController.store.error'),
-                'exception' => $exception->getMessage(),
-            ]);
-        }
+        return $this->responseSuccess([
+            'message' => trans('controllers.TransactionController.store.success'),
+            'data' => new TransactionResource($transaction),
+        ], Response::HTTP_CREATED);
     }
 }

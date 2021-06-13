@@ -8,7 +8,6 @@ use App\Http\Requests\User\ShowRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Http\Resources\UserResource;
 use App\User;
-use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -22,8 +21,8 @@ class UserController extends Controller
     {
         $query = User::query();
 
-        if ($search = $request->get('q')) {
-            $query = $query->searchBy($search);
+        if ($request->filled('q')) {
+            $query = $query->searchBy($request->get('q'));
         }
 
         $users = $query->paginate();
@@ -38,12 +37,15 @@ class UserController extends Controller
      * @param int $id
      * @return UserResource
      */
-    public function show(ShowRequest $request, $id)
+    public function show(ShowRequest $request, int $id)
     {
-        $user = User::findOrFail($id);
-        $userResource = new UserResource($user, true);
+        $user = User::query()
+            ->with([
+                'accounts',
+            ])
+            ->findOrFail($id);
 
-        return $userResource;
+        return new UserResource($user);
     }
 
     /**
@@ -53,28 +55,29 @@ class UserController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request, int $id)
     {
-        $data = $request->all();
         $user = User::findOrFail($id);
+        $data = $request->only([
+            'name',
+            'email',
+            'cpf',
+            'telephone',
+            'password',
+        ]);
 
-        DB::beginTransaction();
-        try {
-            tap($user)->update($data);
-            $userResource = new UserResource($user, true);
-
-            DB::commit();
-            return $this->responseSuccess([
-                'message' => trans('controllers.UserController.update.success'),
-                'data' => $userResource,
-            ]);
-        } catch (\Exception $exception) {
-            DB::rollBack();
-            return $this->responseErrorServer([
-                'message' => trans('controllers.UserController.update.error'),
-                'exception' => $exception->getMessage(),
-            ]);
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->get('password'));
         }
+
+        tap($user)->update($data);
+
+        $userResource = new UserResource($user);
+
+        return $this->responseSuccess([
+            'message' => trans('controllers.UserController.update.success'),
+            'data' => $userResource,
+        ]);
     }
 
     /**
@@ -84,22 +87,12 @@ class UserController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(DestroyRequest $request, $id)
+    public function destroy(DestroyRequest $request, int $id)
     {
-        DB::beginTransaction();
-        try {
-            User::destroy($id);
+        User::destroy($id);
 
-            DB::commit();
-            return $this->responseSuccess([
-                'message' => trans('controllers.UserController.destroy.success'),
-            ]);
-        } catch (\Exception $exception) {
-            DB::rollBack();
-            return $this->responseErrorServer([
-                'message' => trans('controllers.UserController.destroy.error'),
-                'exception' => $exception->getMessage(),
-            ]);
-        }
+        return $this->responseSuccess([
+            'message' => trans('controllers.UserController.destroy.success'),
+        ]);
     }
 }
