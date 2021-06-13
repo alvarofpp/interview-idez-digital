@@ -17,6 +17,7 @@ class TransactionTypeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'transactions' => TransactionResource::collection($this->whenLoaded('transactions')),
         ];
     }
 }

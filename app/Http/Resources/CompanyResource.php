@@ -18,6 +18,8 @@ class CompanyResource extends JsonResource
             'cnpj' => $this->cnpj_masked,
             'company_name' => $this->company_name,
             'trading_name' => $this->trading_name,
+            'account' => new AccountResource($this->whenLoaded('account')),
+            'user' => new UserResource($this->whenLoaded('user')),
         ];
     }
 }
