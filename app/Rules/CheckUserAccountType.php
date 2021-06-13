@@ -32,13 +32,10 @@ class CheckUserAccountType implements Rule
      */
     public function passes($attribute, $value)
     {
-        $user = Auth::user();
-
-        $hasAccount = $user->accounts()
+        return !Auth::user()
+            ->accounts()
             ->where('account_type_id', $value)
             ->exists();
-
-        return !$hasAccount;
     }
 
     /**

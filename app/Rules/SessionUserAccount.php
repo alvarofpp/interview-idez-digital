@@ -32,13 +32,10 @@ class SessionUserAccount implements Rule
      */
     public function passes($attribute, $value)
     {
-        $user = Auth::user();
-
-        $hasAccount = $user->accounts()
+        return Auth::user()
+            ->accounts()
             ->where('id', $value)
             ->exists();
-
-        return $hasAccount;
     }
 
     /**
