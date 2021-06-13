@@ -55,18 +55,16 @@ class TransactionControllerTest extends TestCase
                         'id',
                         'name',
                     ],
-                    'from' => [
-                        'account' => [
+                    'account_from' => [
+                        'id',
+                        'bank_branch',
+                        'number',
+                        'digit',
+                        'account_type' => [
                             'id',
-                            'bank_branch',
-                            'number',
-                            'digit',
-                            'account_type' => [
-                                'id',
-                                'slug',
-                                'name',
-                                'description',
-                            ],
+                            'slug',
+                            'name',
+                            'description',
                         ],
                         'user' => [
                             'id',
@@ -76,18 +74,16 @@ class TransactionControllerTest extends TestCase
                             'email',
                         ],
                     ],
-                    'to' => [
-                        'account' => [
+                    'account_to' => [
+                        'id',
+                        'bank_branch',
+                        'number',
+                        'digit',
+                        'account_type' => [
                             'id',
-                            'bank_branch',
-                            'number',
-                            'digit',
-                            'account_type' => [
-                                'id',
-                                'slug',
-                                'name',
-                                'description',
-                            ],
+                            'slug',
+                            'name',
+                            'description',
                         ],
                         'user' => [
                             'id',
